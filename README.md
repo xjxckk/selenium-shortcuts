@@ -1,4 +1,5 @@
 ### selenium_shortcuts
+Shortcut functions for Python selenium
 
 Installation:
 `pip install selenium_shortcuts`
