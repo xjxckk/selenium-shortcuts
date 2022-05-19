@@ -36,5 +36,6 @@ class setup:
         if not parent:
             parent = self.driver
         element = parent.find_element(By.CSS_SELECTOR, css_selector)
-        element.clear()
+        if clear:
+            element.clear()
         element.send_keys(text)

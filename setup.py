@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = 'selenium_shortcuts',
     packages = ['selenium_shortcuts'],
-    version = '1.2',
+    version = '1.3',
     description = 'Selenium shortcut functions',
     url = 'https://github.com/xjxckk/selenium_shortcuts/',
     download_url = 'https://github.com/xjxckk/selenium_shortcuts/archive/refs/tags/v1.2.tar.gz',
