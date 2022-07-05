@@ -14,10 +14,14 @@ class setup:
             return element, attribute
         return element
 
-    def finds(self, css_selector, parent=None):
+    def finds(self, css_selector, parent=None, wait=None):
         if not parent:
             parent = self.driver
+        if wait:
+            self.driver.implicitly_wait(wait)
         elements = parent.find_elements(By.CSS_SELECTOR, css_selector)
+        if wait:
+            self.driver.implicitly_wait(15)
         return elements
 
     def click(self, css_selector, parent=None):

@@ -1,8 +1,8 @@
-### selenium_shortcuts
+### selenium-shortcuts
 Shortcut functions for Python selenium
 
 Installation:
-`pip install selenium_shortcuts`
+`pip install selenium-shortcuts`
 
 Usage:
 ```
