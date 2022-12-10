@@ -43,3 +43,9 @@ class setup:
         if clear:
             element.clear()
         element.send_keys(text)
+    
+    def get(self, url):
+        if not parent:
+            parent = self.driver
+        if parent.current_url != url:
+            parent.get(url)

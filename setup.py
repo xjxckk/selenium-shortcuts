@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name = 'selenium-shortcuts',
-    packages = ['selenium-shortcuts'],
-    version = '1.5',
+    packages = ['selenium_shortcuts'],
+    version = '1.7',
     description = 'Selenium shortcut functions',
     url = 'https://github.com/xjxckk/selenium-shortcuts/',
     download_url = 'https://github.com/xjxckk/selenium-shortcuts/archive/refs/tags/v1.2.tar.gz',
