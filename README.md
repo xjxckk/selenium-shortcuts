@@ -6,10 +6,10 @@ Installation:
 
 Usage:
 ```
-from selenium_shortcuts import setup
+from selenium_shortcuts import setup_shortcuts
 
-helper = setup(driver) # Put this after you define the webdriver
-find, finds, click, text, send = helper.find, helper.finds, helper.click, helper.text, helper.send
+helper = setup_shortcuts() # Start a browser on port 9222 or reconnect to existing browser on port 9222
+driver, find, finds, click, text, send, get, check = helper.driver, helper.find, helper.finds, helper.click, helper.text, helper.send, helper.get, helper.check
 
 info = text('#info')
 print(info)
@@ -24,6 +24,6 @@ items = finds('.items')
 for item in items:
 	print(item.text)
 
- info, classes = find('#info', attribute='class')
+info, classes = find('#info', attribute='class')
 print(classes)
 ```
