@@ -6,7 +6,9 @@ import undetected_chromedriver as uc
 
 class setup_shortcuts:
     '''Shortcut functions for Selenium'''
-    def __init__(self, port=9222, wait_for=10, browser='chrome', executable_path='chromedriver'):
+    def __init__(self, port=9222, wait_for=10, browser='chrome', executable_path='chromedriver', headless=False):
+        self.browser_process_id = None
+
         try: # Check if Chrome is already started
             response = requests.get(f'http://localhost:{port}/json')
         except requests.exceptions.ConnectionError: # Otherwise, start Chrome
@@ -23,11 +25,14 @@ class setup_shortcuts:
 
             for candidate in possible_chrome_locations:
                 if os.path.exists(candidate):
-                    subprocess.Popen([candidate, f'--remote-debugging-port={port}', f'--user-data-dir={os.getcwd()}/profile', '--start-maximized'])
+                    launch_arguments = [candidate, f'--remote-debugging-port={port}', f'--user-data-dir={os.getcwd()}/profile', '--start-maximized', '--no-default-browser-check', '--no-first-run', '--credentials_enable_service=false', '--profile.password_manager_enabled=false', '--disable-save-password-bubble', '--disable-notifications']
+                    if headless:
+                        launch_arguments += ['--headless', '--window-size=1920,1080', '--start-maximized', '--no-sandbox']
+                    self.browser_process_id = subprocess.Popen(launch_arguments).pid
                     sleep(1)
         
         options = uc.ChromeOptions()
-        options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1, not localhost
+        options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1 for undetected-chromedriver, not localhost
         if browser == 'uc':
             driver = uc.Chrome(options=options)
             os.kill(driver.browser_pid, 15) # undetected-chromedriver connects to the existing browser then starts a browser on a random port, this closes the random browser
@@ -92,3 +97,7 @@ class setup_shortcuts:
             return elements
         else:
             return None
+    
+    def close(self):
+        if self.browser_process_id:
+            os.kill(self.browser_process_id, 15)
