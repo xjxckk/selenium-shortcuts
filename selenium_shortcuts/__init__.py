@@ -29,7 +29,7 @@ class setup_shortcuts:
         options = uc.ChromeOptions()
         options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1, not localhost
         if browser == 'uc':
-            driver = uc.Chrome(options=options) # , version_main=92
+            driver = uc.Chrome(options=options)
             os.kill(driver.browser_pid, 15) # undetected-chromedriver connects to the existing browser then starts a browser on a random port, this closes the random browser
         else:
             driver = webdriver.Chrome(options=options)
