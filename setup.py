@@ -4,7 +4,7 @@ setup(
     name = 'selenium-shortcuts',
     packages = ['selenium_shortcuts'],
     install_requires = ['requests', 'undetected-chromedriver'],
-    version = '2.8',
+    version = '3.4',
     description = 'Selenium shortcut functions',
     url = 'https://github.com/xjxckk/selenium-shortcuts/',
     download_url = 'https://github.com/xjxckk/selenium-shortcuts/archive/refs/tags/v1.2.tar.gz',

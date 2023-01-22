@@ -1,43 +1,50 @@
-import os, subprocess, requests
+import os, sys, subprocess, requests
 from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import undetected_chromedriver as uc
 
 class setup_shortcuts:
     '''Shortcut functions for Selenium'''
-    def __init__(self, port=9222, wait_for=10, browser='chrome', executable_path='chromedriver', headless=False):
+    def __init__(self, port=9222, wait_for=10, browser='chrome', executable_path='chromedriver', headless=False, browser_version=None, driver=None):
         self.browser_process_id = None
 
-        try: # Check if Chrome is already started
-            response = requests.get(f'http://localhost:{port}/json')
-        except requests.exceptions.ConnectionError: # Otherwise, start Chrome
-            system_drive = os.environ.get('SYSTEMDRIVE') # 'C:\'
-            folders_chrome_could_be_installed_to = [
-                os.environ.get('PROGRAMFILES'),
-                os.environ.get('PROGRAMFILES(X86)'),
-                os.environ.get('LOCALAPPDATA')
-                ]
-            possible_chrome_locations = []
-            for folder in folders_chrome_could_be_installed_to:
-                possible_chrome_locations.append(f'{folder}/Google/Chrome/Application/chrome.exe')
-                possible_chrome_locations.append(f'{folder}/Chromium/Application/chrome.exe')
+        if not driver:
+            try: # Check if Chrome is already started
+                response = requests.get(f'http://localhost:{port}/json')
+            except requests.exceptions.ConnectionError: # Otherwise, start Chrome
+                possible_chrome_locations = []
+                if 'darwin' in sys.platform:
+                    possible_chrome_locations.append('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
+                    possible_chrome_locations.append('/Applications/Chromium.app/Contents/MacOS/Chromium')
+                else:
+                    system_drive = os.environ.get('SYSTEMDRIVE') # 'C:\'
+                    folders_chrome_could_be_installed_to = [
+                        os.environ.get('PROGRAMFILES'),
+                        os.environ.get('PROGRAMFILES(X86)'),
+                        os.environ.get('LOCALAPPDATA')
+                        ]
+                    for folder in folders_chrome_could_be_installed_to:
+                        possible_chrome_locations.append(f'{folder}/Google/Chrome/Application/chrome.exe')
+                        possible_chrome_locations.append(f'{folder}/Chromium/Application/chrome.exe')
 
-            for candidate in possible_chrome_locations:
-                if os.path.exists(candidate):
-                    launch_arguments = [candidate, f'--remote-debugging-port={port}', f'--user-data-dir={os.getcwd()}/profile', '--start-maximized', '--no-default-browser-check', '--no-first-run', '--credentials_enable_service=false', '--profile.password_manager_enabled=false', '--disable-save-password-bubble', '--disable-notifications']
-                    if headless:
-                        launch_arguments += ['--headless', '--window-size=1920,1080', '--start-maximized', '--no-sandbox']
-                    self.browser_process_id = subprocess.Popen(launch_arguments).pid
-                    sleep(1)
-        
-        options = uc.ChromeOptions()
-        options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1 for undetected-chromedriver, not localhost
-        if browser == 'uc':
-            driver = uc.Chrome(options=options)
-            os.kill(driver.browser_pid, 15) # undetected-chromedriver connects to the existing browser then starts a browser on a random port, this closes the random browser
-        else:
-            driver = webdriver.Chrome(options=options)
+                for candidate in possible_chrome_locations:
+                    if os.path.exists(candidate):
+                        launch_arguments = [candidate, f'--remote-debugging-port={port}', f'--user-data-dir={os.getcwd()}/profile', '--start-maximized', '--no-default-browser-check', '--no-first-run', '--credentials_enable_service=false', '--profile.password_manager_enabled=false', '--disable-save-password-bubble', '--disable-notifications']
+                        if headless:
+                            launch_arguments += ['--headless', '--window-size=1920,1080', '--start-maximized', '--no-sandbox']
+                        self.browser_process_id = subprocess.Popen(launch_arguments).pid
+                        sleep(1)
+                        break
+            
+            options = webdriver.ChromeOptions()
+            options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1 for undetected-chromedriver, not localhost
+            if browser == 'uc':
+                import undetected_chromedriver as uc
+                driver = uc.Chrome(options=options, use_subprocess=True, driver_executable_path=executable_path, version_main=browser_version)
+                os.kill(driver.browser_pid, 15) # undetected-chromedriver connects to the existing browser then starts a browser on a random port, this closes the random browser
+            else:
+                driver = webdriver.Chrome(options=options, executable_path=executable_path)
+                
         driver.implicitly_wait(wait_for) # Wait X seconds for element to load before raising error
         self.driver = driver
         self.wait_for = wait_for
@@ -96,7 +103,7 @@ class setup_shortcuts:
         if elements and elements[0].is_displayed():
             return elements
         else:
-            return None
+            return []
     
     def close(self):
         if self.browser_process_id:
