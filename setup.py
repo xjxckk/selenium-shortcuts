@@ -4,7 +4,7 @@ setup(
     name = 'selenium-shortcuts',
     packages = ['selenium_shortcuts'],
     install_requires = ['requests'],
-    version = '4.3',
+    version = '4.4',
     description = 'Selenium shortcut functions',
     url = 'https://github.com/xjxckk/selenium-shortcuts/',
     download_url = 'https://github.com/xjxckk/selenium-shortcuts/archive/refs/tags/v1.2.tar.gz',
