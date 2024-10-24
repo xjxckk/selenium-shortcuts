@@ -3,8 +3,8 @@ from setuptools import setup
 setup(
     name = 'selenium-shortcuts',
     packages = ['selenium_shortcuts'],
-    install_requires = ['requests', 'undetected-chromedriver'],
-    version = '4.2',
+    install_requires = ['requests'],
+    version = '4.3',
     description = 'Selenium shortcut functions',
     url = 'https://github.com/xjxckk/selenium-shortcuts/',
     download_url = 'https://github.com/xjxckk/selenium-shortcuts/archive/refs/tags/v1.2.tar.gz',
