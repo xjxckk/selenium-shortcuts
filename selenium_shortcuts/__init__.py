@@ -18,10 +18,10 @@ class setup_shortcuts:
             options.debugger_address = f'127.0.0.1:{port}' # Must be 127.0.0.1 for undetected-chromedriver, not localhost
             if use_uc:
                 import undetected_chromedriver as uc
-                driver = uc.Chrome(options=options, driver_executable_path=executable_path, version_main=browser_version)
+                driver = uc.Chrome(options=options, use_subprocess=True, driver_executable_path=executable_path, version_main=browser_version)
                 os.kill(driver.browser_pid, 15) # undetected-chromedriver connects to the existing browser then starts a browser on a random port, this closes the random browser
             else:
-                driver = webdriver.Chrome(options=options, executable_path=executable_path)
+                driver = webdriver.Chrome(options=options)
                 
         driver.implicitly_wait(wait_for) # Wait X seconds for element to load before raising error
         self.driver = driver
